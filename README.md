@@ -34,10 +34,78 @@ STEP-5: Display the obtained cipher text.
 
 
 
-Program:
+## Program:
+```
+#include <stdio.h>
+#include <string.h>
+#include <ctype.h>
+
+char m[5][5];
+void keyMatrix(char key[])
+{
+    int used[26]={0}, k=0;
+    for(int i=0; key[i]; i++)
+    {
+        if(key[i]=='J') key[i]='I';
+        if(!used[key[i]-'A'])
+            m[k/5][k%5]=key[i], used[key[i]-'A']=1, k++;
+    }
+    for(int i=0;i<26;i++)
+        if(i+'A'!='J' && !used[i])
+            m[k/5][k%5]=i+'A', k++;
+}
+void find(char c,int *r,int *c1)
+{
+    for(int i=0;i<5;i++)
+        for(int j=0;j<5;j++)
+            if(m[i][j]==c){*r=i;*c1=j;}
+}
+
+void encrypt(char t[])
+{
+    int r1,c1,r2,c2;
+    printf("Encrypted Text: ");
+    for(int i=0;i<strlen(t);i+=2)
+    {
+        find(t[i],&r1,&c1);
+        find(t[i+1],&r2,&c2);
+
+        if(r1==r2)
+            printf("%c%c",m[r1][(c1+1)%5],m[r2][(c2+1)%5]);
+        else if(c1==c2)
+            printf("%c%c",m[(r1+1)%5][c1],m[(r2+1)%5][c2]);
+        else
+            printf("%c%c",m[r1][c2],m[r2][c1]);
+    }
+}
+
+int main()
+{
+    char key[20], text[50];
+
+    printf("Enter Key: ");
+    scanf("%s",key);
+    printf("Enter Plain Text: ");
+    scanf("%s",text);
+
+    for(int i=0;key[i];i++) key[i]=toupper(key[i]);
+    for(int i=0;text[i];i++){
+        text[i]=toupper(text[i]);
+        if(text[i]=='J') text[i]='I';
+    }
+
+    if(strlen(text)%2!=0) strcat(text,"X");
+
+    keyMatrix(key);
+    encrypt(text);
+    return 0;
+}
+```
+## Output:
+<img width="1918" height="946" alt="Screenshot 2026-01-29 144621" src="https://github.com/user-attachments/assets/48723edb-cab2-4657-8465-b5ec48adf2d8" />
+<img width="1920" height="998" alt="Screenshot 2026-01-29 at 14-46-38 Online C Compiler - Programiz" src="https://github.com/user-attachments/assets/3320bd3e-47ca-4c17-8262-91703db02e7b" />
+
+## Result:
+Thus the program executed successfully.
 
 
-
-
-
-Output:
